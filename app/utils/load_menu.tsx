@@ -5,6 +5,7 @@ import cron from "node-cron";
 
 const load_menu = `https://main.api.lsk-sbx.app/o/op/1/menu/load/`;
 const get_images = `https://main.api.lsk-sbx.app/i/richItem/`;
+const allMenu = `https://main.api.lsk-sbx.app/items/v1/business-locations/`
 const cache = new Map<string, RichItemDto>();
 
 export const completeMenu = async (menuId: string, businessLocationId: string, businessId: string): Promise<MyMenu> => {
@@ -30,6 +31,16 @@ export const completeMenu = async (menuId: string, businessLocationId: string, b
     });
     return res;
   });
+};
+
+export const fetchAllMenu = async (businessLocationId: string): Promise<Nodes> => {
+  const payload = await create_token();
+  return fetch(allMenu + businessLocationId + "/menus", {
+    method: RESTMethods.GET,
+    headers: {
+      "Authorization": "Bearer " + payload.access_token
+    }
+  }).then(resp => resp.json());
 };
 
 const loadMenu = async (menuId: string, businessLocationId: string): Promise<MyMenu> => {
@@ -121,6 +132,24 @@ interface RichItemResponse {
     self: Link;
   };
 }
+
+interface Node {
+  id: number;
+  name: string;
+  businessLocationId: number;
+  businessLocationName: string;
+  inSync: boolean;
+  parent: any; // or number if applicable
+  instances: any[]; // or instance interface if applicable
+  configurations: any[]; // or configuration interface if applicable
+  syncVersion: number;
+  primary: boolean;
+}
+
+interface Nodes {
+  nodes: Node[];
+}
+
 
 cron.schedule("*/5 * * * *", () => {
   cache.clear();
