@@ -1,9 +1,11 @@
 import fetch from "node-fetch";
 import { RESTMethods } from "msw";
 import { create_token } from "~/utils/create_token";
+import cron from "node-cron";
 
 const load_menu = `https://main.api.lsk-sbx.app/o/op/1/menu/load/`;
 const get_images = `https://main.api.lsk-sbx.app/i/richItem/`;
+const cache = new Map<string, RichItemDto>();
 
 export const completeMenu = async (menuId: string, businessLocationId: string, businessId: string): Promise<MyMenu> => {
   let payloadPromise = await create_token();
@@ -13,13 +15,14 @@ export const completeMenu = async (menuId: string, businessLocationId: string, b
     const menuItems = new Set(menuEntryGroups
       .flatMap(group => group.menuEntry));
 
-    const imagesAndDescription = await getImagesAndDescription(businessId, payloadPromise.access_token)
-      .then(res => res._embedded.richItemDtoList);
-    const richItemMap = new Map<string, RichItem>();
-    imagesAndDescription.forEach(item => richItemMap.set(item.sku, item));
+    if (cache.size == 0) {
+      const imagesAndDescription = await getImagesAndDescription(businessId, payloadPromise.access_token)
+        .then(res => res._embedded.richItemDtoList);
+      imagesAndDescription.forEach(item => cache.set(item.sku, item));
+    }
 
     menuItems.forEach(menu => {
-      const data = richItemMap.get(menu.sku);
+      const data = cache.get(menu.sku);
       if (data != null) {
         menu.description = data.descriptions[0]?.description;
         menu.pictureUrl = data.pictureUrl;
@@ -52,33 +55,6 @@ export const getImagesAndDescription = (businessId: string, token: string): Prom
     }
   });
 };
-
-interface Description {
-  description: string;
-  displayName: string;
-  localeCode: string;
-}
-
-interface Links {
-  self: {
-    href: string;
-  };
-  items: {
-    href: string;
-  };
-}
-
-interface RichItem {
-  allergenCodes: string[];
-  businessId: number;
-  descriptions: Description[];
-  sku: string;
-  creationDate: string;
-  lastUpdateDate: string;
-  pictureUrl: string;
-  rawPictureUrl: string;
-  _links: Links;
-}
 
 interface MenuItem {
   "@type": string;
@@ -145,4 +121,9 @@ interface RichItemResponse {
     self: Link;
   };
 }
+
+cron.schedule("*/5 * * * *", () => {
+  cache.clear();
+  console.log("Cache is cleared");
+});
 
