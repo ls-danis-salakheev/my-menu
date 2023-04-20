@@ -53,11 +53,6 @@ export const getImagesAndDescription = (businessId: string, token: string): Prom
   });
 };
 
-// class PictureDescInfo {
-//   constructor(public pictureUrl: string, public description: string | undefined) {
-//   }
-// }
-
 interface Description {
   description: string;
   displayName: string;
