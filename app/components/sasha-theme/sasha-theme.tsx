@@ -89,7 +89,7 @@ export function SashaTheme({
                 {
                     logo && (
                         <div className='theme__branding'>
-                            { <img className='theme__restaurant-logo' src={logo} alt={restaurantName} /> }
+                            { <img className='theme__restaurant-logo' src={logo} style={{ filter: `grayscale(${themeName === 'dark' ? 1 : 0})` }} alt={restaurantName} /> }
                             <div className='theme__restaurant-name' style={{ fontSize: sizes.restaurantName }}>{restaurantName}</div>
                         </div>
                     )
