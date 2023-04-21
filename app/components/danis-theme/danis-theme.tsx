@@ -89,8 +89,8 @@ export function DanisTheme({
             <div className='theme__aside' style={{ backgroundColor: currentTheme.backgroundColor }}>
                 <div className='theme__menu-name' style={{ fontSize: sizes.menuName }}>{menuName}</div>
                 <div className='theme__branding'>
-                    { logo && <img className='theme__restaurant-logo' src={logo} alt={restaurantName} /> }
-                    <div className='theme__restaurant-name' style={{ fontSize: sizes.restaurantName, filter: `grayscale(${themeName === 'dark' ? 1 : 0})` }}>{restaurantName}</div>
+                    { logo && <img className='theme__restaurant-logo' src={logo} alt={restaurantName} style={{ filter: `grayscale(${themeName === 'dark' ? 1 : 0})` }} /> }
+                    <div className='theme__restaurant-name' style={{ fontSize: sizes.restaurantName }}>{restaurantName}</div>
                 </div>
             </div>
             <div className='theme__menu'>
