@@ -4,13 +4,6 @@
     margin: 0;
 }
 
-@media print {
-    .theme__aside {
-        position: absolute;
-        min-height: 100vh;
-    }
-}
-
 body {
     color: #020203;
     font-weight: 500;
@@ -93,4 +86,16 @@ body {
 
 .menu-groups__product-price {
     margin-left: 30px;
+}
+
+@media print {
+    .theme__aside {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 29.7cm;
+    }
+    .theme__menu {
+        padding-left: 180px;
+    }
 }

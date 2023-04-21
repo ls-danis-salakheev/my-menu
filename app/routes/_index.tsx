@@ -8,6 +8,7 @@ import { IconDesign } from '@lightspeed/flame/Icon/Design';
 import { IconExport } from '@lightspeed/flame/Icon/Export';
 import { Select } from '@lightspeed/flame/Select';
 import { Divider } from '@lightspeed/flame/Divider';
+import { Bone } from '@lightspeed/flame/Bone';
 import { Checkbox } from '@lightspeed/flame/Checkbox';
 import { Flex } from '@lightspeed/flame/Core';
 import { Spinner } from '@lightspeed/flame/Spinner';
@@ -165,73 +166,78 @@ function Menu() {
         setHiddenItems(newHiddenItems);
     }
 
+    if (!menu) {
+      return (
+        <FlameTheme>
+          <FlameGlobalStyles />
+          <div className="page">
+            <Bone width='360px' height='100vh' />
+            <Bone className='page__viewer' width='21cm' height='95vh' />
+            <Bone width='360px' height='100vh' />
+          </div>
+        </FlameTheme>
+      )
+    }
+
     return (
         <FlameTheme>
             <FlameGlobalStyles />
             <div className="page">
                 <div className='page__sidebar menu-creater'>
                     <img className='menu-creater__logo' src='./lightspeed.png'/>
-                    {
-                      menu ? (
-                        <div className='menu-creater__items'>
-                            <Checkbox
-                                defaultChecked
-                                label='Menu'
-                                className={'checkbox checkbox--1'}
-                                onChange={(e) => onChangeToggleAll(e.target.checked)}  
-                            />
-                            <Divider />
-                            {
-                                menu.menuEntryGroups.map((group) => (
-                                    <>
-                                        <Checkbox
-                                            defaultChecked
-                                            label={group.name}
-                                            className={'checkbox checkbox--2'}
-                                            indeterminate={hiddenItems[group.id]?.length !== 0 && hiddenItems[group.id]?.length !== group.menuEntry.length}
-                                            checked={!hiddenItems[group.id]?.length}
-                                            onChange={(e) => toggleMenu(e.target.checked, group.id, group.menuEntry)} 
-                                        />
-                                        <Divider />
-                                        {
-                                            group.menuEntry.map((menu) => (
-                                                <>
-                                                    <Checkbox
-                                                        defaultChecked
-                                                        label={menu.productName}
-                                                        className={'checkbox checkbox--3'}
-                                                        onChange={(e) => toggleItem(e.target.checked, group.id, menu.productName)}
-                                                        checked={!hiddenItems[group.id]?.includes(menu.productName)}
-                                                    />
-                                                    <Divider />
-                                                </>
-                                            ))
-                                        }
-                                    </>
-                                ))
-                            }
-                        </div>
-                      ) : <Spinner />
-                    }
+                      <div className='menu-creater__items'>
+                          <Checkbox
+                              defaultChecked
+                              label='Menu'
+                              className={'checkbox checkbox--1'}
+                              onChange={(e) => onChangeToggleAll(e.target.checked)}  
+                          />
+                          <Divider />
+                          {
+                              menu.menuEntryGroups.map((group) => (
+                                  <>
+                                      <Checkbox
+                                          defaultChecked
+                                          label={group.name}
+                                          className={'checkbox checkbox--2'}
+                                          indeterminate={hiddenItems[group.id]?.length !== 0 && hiddenItems[group.id]?.length !== group.menuEntry.length}
+                                          checked={!hiddenItems[group.id]?.length}
+                                          onChange={(e) => toggleMenu(e.target.checked, group.id, group.menuEntry)} 
+                                      />
+                                      <Divider />
+                                      {
+                                          group.menuEntry.map((menu) => (
+                                              <>
+                                                  <Checkbox
+                                                      defaultChecked
+                                                      label={menu.productName}
+                                                      className={'checkbox checkbox--3'}
+                                                      onChange={(e) => toggleItem(e.target.checked, group.id, menu.productName)}
+                                                      checked={!hiddenItems[group.id]?.includes(menu.productName)}
+                                                  />
+                                                  <Divider />
+                                              </>
+                                          ))
+                                      }
+                                  </>
+                              ))
+                          }
+                      </div>
                 </div>
                 <div className='page__viewer'>
-                    {
-                      menu ? (
-                        <IFrame id='pdf' className={'viewer'}>
-                            <Template
-                              setDefaultSizes={setFontSizes}
-                              sizes={fontSizes}
-                              menuName={menuName}
-                              theme={theme}
-                              menu={menu.menuEntryGroups}
-                              hiddenItems={hiddenItems}
-                              logo={image}
-                              showPrice={showPrice}
-                              restaurantName={restaurantName}
-                            />
-                        </IFrame>
-                      ) : <Spinner size='big' />
-                    }
+                  <IFrame id='pdf' className={'viewer'}>
+                      <Template
+                        setDefaultSizes={setFontSizes}
+                        sizes={fontSizes}
+                        menuName={menuName}
+                        theme={theme}
+                        menu={menu.menuEntryGroups}
+                        hiddenItems={hiddenItems}
+                        logo={image}
+                        showPrice={showPrice}
+                        restaurantName={restaurantName}
+                      />
+                  </IFrame>
                 </div>
                 <div className='page__sidebar editor'>
                     <div className='editor__row'>

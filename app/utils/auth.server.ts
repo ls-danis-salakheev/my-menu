@@ -3,9 +3,16 @@ import { createCookieSessionStorage } from "@remix-run/node";
 import { Authenticator } from "remix-auth";
 import { KeycloakStrategy } from "remix-auth-keycloak";
 
-export const sessionStorage = createCookieSessionStorage({  });
+export const sessionStorage = createCookieSessionStorage({ 
+  cookie: {
+    maxAge: 360,
+    path: '/',
+  }
+});
 
-export const authenticator = new Authenticator(sessionStorage);
+export const authenticator = new Authenticator(sessionStorage, {
+  
+});
 
 let keycloakStrategy = new KeycloakStrategy(
   {
