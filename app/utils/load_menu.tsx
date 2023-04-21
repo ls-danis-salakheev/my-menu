@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
 import { RESTMethods } from "msw";
-import { create_token } from "~/utils/create_token";
 import cron from "node-cron";
 
 const load_menu = `https://main.api.lsk-sbx.app/o/op/1/menu/load/`;
@@ -8,16 +7,15 @@ const get_images = `https://main.api.lsk-sbx.app/i/richItem/`;
 const allMenu = `https://main.api.lsk-sbx.app/items/v1/business-locations/`
 const cache = new Map<string, RichItemDto>();
 
-export const completeMenu = async (menuId: string, businessLocationId: string, businessId: string): Promise<MyMenu> => {
-  let payloadPromise = await create_token();
-  return loadMenu(menuId, businessLocationId).then(async res => {
+export const completeMenu = async (menuId: string, businessLocationId: string, businessId: string, token: string | unknown): Promise<MyMenu> => {
+  return loadMenu(menuId, businessLocationId, token).then(async res => {
     const menuEntryGroups = res.menuEntryGroups;
     menuEntryGroups.flatMap(r => r.menuEntry).map(me => me.sku);
     const menuItems = new Set(menuEntryGroups
       .flatMap(group => group.menuEntry));
 
     if (cache.size == 0) {
-      const imagesAndDescription = await getImagesAndDescription(businessId, payloadPromise.access_token)
+      const imagesAndDescription = await getImagesAndDescription(businessId, token)
         .then(res => res._embedded.richItemDtoList);
       imagesAndDescription.forEach(item => cache.set(item.sku, item));
     }
@@ -33,27 +31,25 @@ export const completeMenu = async (menuId: string, businessLocationId: string, b
   });
 };
 
-export const fetchAllMenu = async (businessLocationId: string): Promise<Nodes> => {
-  const payload = await create_token();
+export const fetchAllMenu = async (businessLocationId: string, token: string | unknown): Promise<Nodes> => {
   return fetch(allMenu + businessLocationId + "/menus", {
     method: RESTMethods.GET,
     headers: {
-      "Authorization": "Bearer " + payload.access_token
+      "Authorization": `Bearer ${token}`
     }
   }).then(resp => resp.json());
 };
 
-const loadMenu = async (menuId: string, businessLocationId: string): Promise<MyMenu> => {
-  const payload = await create_token();
+const loadMenu = async (menuId: string, businessLocationId: string, token: string | unknown): Promise<MyMenu> => {
   return fetch(load_menu + menuId + "?businessLocationId=" + businessLocationId, {
     method: RESTMethods.GET,
     headers: {
-      "Authorization": "Bearer " + payload.access_token
+      "Authorization":`Bearer ${token}`
     }
   }).then(resp => resp.json());
 };
 
-export const getImagesAndDescription = (businessId: string, token: string): Promise<RichItemResponse> => {
+export const getImagesAndDescription = (businessId: string, token: string | unknown): Promise<RichItemResponse> => {
   return fetch(get_images + businessId, {
     headers: {
       "Authorization": "Bearer " + token

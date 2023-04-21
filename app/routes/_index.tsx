@@ -1,141 +1,316 @@
-import type { V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
 
-import { useOptionalUser } from "~/utils";
+import { useEffect, useMemo, useState } from 'react';
+import { FlameTheme, FlameGlobalStyles } from '@lightspeed/flame/Core';
+import { Input } from '@lightspeed/flame/Input';
+import { Text } from '@lightspeed/flame/Text';
+import { Button } from '@lightspeed/flame/Button';
+import { IconDesign } from '@lightspeed/flame/Icon/Design';
+import { IconExport } from '@lightspeed/flame/Icon/Export';
+import { Select } from '@lightspeed/flame/Select';
+import { Divider } from '@lightspeed/flame/Divider';
+import { Checkbox } from '@lightspeed/flame/Checkbox';
+import { Flex } from '@lightspeed/flame/Core';
+import { Spinner } from '@lightspeed/flame/Spinner';
+import { SashaTheme, MenuItem } from '~/components/sasha-theme/sasha-theme';
+import { DanisTheme } from '~/components/danis-theme/danis-theme';
+import { createPortal } from 'react-dom';
+import { authenticator } from '~/utils/auth.server';
+import { LoaderArgs, redirect } from '@remix-run/node';
 
-export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }];
-
-export default function Index() {
-  const user = useOptionalUser();
-  return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
-      <div className="relative sm:pb-16 sm:pt-8">
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
-            <div className="absolute inset-0">
-              <img
-                className="h-full w-full object-cover"
-                src="https://user-images.githubusercontent.com/1500684/157774694-99820c51-8165-4908-a031-34fc371ac0d6.jpg"
-                alt="Sonic Youth On Stage"
-              />
-              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
-            </div>
-            <div className="relative px-4 pb-8 pt-16 sm:px-6 sm:pb-14 sm:pt-24 lg:px-8 lg:pb-20 lg:pt-32">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block uppercase text-yellow-500 drop-shadow-md">
-                  Indie Stack
-                </span>
-              </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
-                Check the README.md file for instructions on how to get this
-                project deployed.
-              </p>
-              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-                {user ? (
-                  <Link
-                    to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                  >
-                    View Notes for {user.email}
-                  </Link>
-                ) : (
-                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                    <Link
-                      to="/join"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                    >
-                      Sign up
-                    </Link>
-                    <Link
-                      to="/login"
-                      className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
-                    >
-                      Log In
-                    </Link>
-                  </div>
-                )}
-              </div>
-              <a href="https://remix.run">
-                <img
-                  src="https://user-images.githubusercontent.com/1500684/158298926-e45dafff-3544-4b69-96d6-d3bcc33fc76a.svg"
-                  alt="Remix"
-                  className="mx-auto mt-16 w-full max-w-[12rem] md:max-w-[16rem]"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
-          <div className="mt-6 flex flex-wrap justify-center gap-8">
-            {[
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764397-ccd8ea10-b8aa-4772-a99b-35de937319e1.svg",
-                alt: "Fly.io",
-                href: "https://fly.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764395-137ec949-382c-43bd-a3c0-0cb8cb22e22d.svg",
-                alt: "SQLite",
-                href: "https://sqlite.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764484-ad64a21a-d7fb-47e3-8669-ec046da20c1f.svg",
-                alt: "Prisma",
-                href: "https://prisma.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764276-a516a239-e377-4a20-b44a-0ac7b65c8c14.svg",
-                alt: "Tailwind",
-                href: "https://tailwindcss.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764454-48ac8c71-a2a9-4b5e-b19c-edef8b8953d6.svg",
-                alt: "Cypress",
-                href: "https://www.cypress.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772386-75444196-0604-4340-af28-53b236faa182.svg",
-                alt: "MSW",
-                href: "https://mswjs.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772447-00fccdce-9d12-46a3-8bb4-fac612cdc949.svg",
-                alt: "Vitest",
-                href: "https://vitest.dev",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772662-92b0dd3a-453f-4d18-b8be-9fa6efde52cf.png",
-                alt: "Testing Library",
-                href: "https://testing-library.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772934-ce0a943d-e9d0-40f8-97f3-f464c0811643.svg",
-                alt: "Prettier",
-                href: "https://prettier.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772990-3968ff7c-b551-4c55-a25c-046a32709a8e.svg",
-                alt: "ESLint",
-                href: "https://eslint.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157773063-20a0ed64-b9f8-4e0b-9d1e-0b65a3d4a6db.svg",
-                alt: "TypeScript",
-                href: "https://typescriptlang.org",
-              },
-            ].map((img) => (
-              <a
-                key={img.href}
-                href={img.href}
-                className="flex h-16 w-32 justify-center p-1 grayscale transition hover:grayscale-0 focus:grayscale-0"
-              >
-                <img alt={img.alt} src={img.src} className="object-contain" />
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+const TEMPLATE = {
+  sasha: SashaTheme,
+  danis: DanisTheme,
 }
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const token = await authenticator.isAuthenticated(request);
+
+  if (!token) {
+    return redirect('/auth/auth0');
+  }
+
+  return null;
+};
+
+export const IFrame = ({
+    children,
+    ...props
+  }) => {
+    const [contentRef, setContentRef] = useState(null)
+    const mountNode =
+      contentRef?.contentWindow?.document?.body
+  
+    return (
+      <iframe {...props} ref={setContentRef}>
+        {mountNode && createPortal(children, mountNode)}
+      </iframe>
+    )
+}
+
+function FontSizeSelect({ value = 'default', onChange }) {
+    return (
+        <Select value={value} onChange={onChange}>
+            <option value='default'>-</option>
+            <option value='10'>10</option>
+            <option value='11'>11</option>
+            <option value='12'>12</option>
+            <option value='13'>13</option>
+            <option value='14'>14</option>
+            <option value='15'>15</option>
+            <option value='16'>16</option>
+            <option value='20'>20</option>
+            <option value='21'>21</option>
+            <option value='24'>24</option>
+            <option value='32'>32</option>
+            <option value='36'>36</option>
+            <option value='40'>40</option>
+            <option value='48'>48</option>
+            <option value='61'>61</option>
+            <option value='64'>64</option>
+            <option value='96'>96</option>
+            <option value='100'>100</option>
+            <option value='104'>104</option>
+            <option value='106'>106</option>
+            <option value='110'>110</option>
+            <option value='116'>116</option>
+            <option value='128'>128</option>
+        </Select>
+    )
+}
+
+export const useData = (url) => {
+  const [state, setState] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const dataFetch = async () => {
+      setIsLoading(true);
+      const data = await (await fetch(url)).json();
+
+      setState(data);
+      setIsLoading(false);
+    };
+
+    dataFetch();
+  }, [url]);
+
+  return { data: state, isLoading };
+};
+
+function Menu() {
+    const [currentLocation, setCurrentLocation] = useState('629066679975938');
+    const [restaurantName, setRestaurantName] = useState('Good taste');
+    const [menuName, setMenuName] = useState('Menu');
+    const [selectedMenu, setSelectedMenu] = useState('');
+    const [theme, setTheme] = useState('colorful' as const);
+    const [image, setImage] = useState<string>('');
+    const [showPrice, setShowPrice] = useState(true);
+    const [hiddenItems, setHiddenItems] = useState<Record<string, string[]>>({});
+    const [fontSizes, setFontSizes] = useState<Record<string, number> | undefined>(undefined);
+    const [templateName, setTemplateName] = useState<keyof typeof TEMPLATE>('sasha');
+
+    const { data: menusData, isLoading: isMenusLoading } = useData(`/menus?businessLocationId=${currentLocation}`);
+    const { data: menu, isLoading: isMenuLoading } = useData(`/get_menu?businessId=36616&businessLocationId=${currentLocation}&menuId=${selectedMenu || 629066679975976}`);
+
+    const Template = TEMPLATE[templateName];
+
+    const onChange = (event) => {
+        if(!event.target?.files[0]) {
+            setImage('');
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            console.log(event.target?.result);
+            setImage(String(event.target?.result));
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+
+      const toggleMenu = (checked: boolean, menu: string, products: MenuItem[]) => {
+        setHiddenItems((prev) => {
+            return {
+                ...prev,
+                [menu]: checked ? [] : products.map(({ productName }) => productName),
+            }
+        });
+    }
+
+    const toggleItem = (checked: boolean, menu: string, product: string) => {
+        setHiddenItems((prev) => {
+            if (!checked) {
+                return {
+                    ...prev,
+                    [menu]: [...(prev[menu] || []), product],
+                }
+            }
+
+            const products = prev[menu].filter((currentProduct) => currentProduct !== product);
+
+            return {
+                ...prev,
+                [menu]: products,
+            }
+        });
+    }
+
+    const onChangeToggleAll = (checked: boolean) => {
+        if (checked) return setHiddenItems({});
+
+        const newHiddenItems = menu.menuEntryGroups.reduce((prev, { id, menuEntry }) => ({
+            ...prev,
+            [id]: menuEntry.map(({ productName }) => productName)
+        }), {});
+
+        setHiddenItems(newHiddenItems);
+    }
+
+    return (
+        <FlameTheme>
+            <FlameGlobalStyles />
+            <div className="page">
+                <div className='page__sidebar menu-creater'>
+                    <img className='menu-creater__logo' src='./lightspeed.png'/>
+                    {
+                      menu ? (
+                        <div className='menu-creater__items'>
+                            <Checkbox
+                                defaultChecked
+                                label='Menu'
+                                className={'checkbox checkbox--1'}
+                                onChange={(e) => onChangeToggleAll(e.target.checked)}  
+                            />
+                            <Divider />
+                            {
+                                menu.menuEntryGroups.map((group) => (
+                                    <>
+                                        <Checkbox
+                                            defaultChecked
+                                            label={group.name}
+                                            className={'checkbox checkbox--2'}
+                                            indeterminate={hiddenItems[group.id]?.length !== 0 && hiddenItems[group.id]?.length !== group.menuEntry.length}
+                                            checked={!hiddenItems[group.id]?.length}
+                                            onChange={(e) => toggleMenu(e.target.checked, group.id, group.menuEntry)} 
+                                        />
+                                        <Divider />
+                                        {
+                                            group.menuEntry.map((menu) => (
+                                                <>
+                                                    <Checkbox
+                                                        defaultChecked
+                                                        label={menu.productName}
+                                                        className={'checkbox checkbox--3'}
+                                                        onChange={(e) => toggleItem(e.target.checked, group.id, menu.productName)}
+                                                        checked={!hiddenItems[group.id]?.includes(menu.productName)}
+                                                    />
+                                                    <Divider />
+                                                </>
+                                            ))
+                                        }
+                                    </>
+                                ))
+                            }
+                        </div>
+                      ) : <Spinner />
+                    }
+                </div>
+                <div className='page__viewer'>
+                    {
+                      menu ? (
+                        <IFrame id='pdf' className={'viewer'}>
+                            <Template
+                              setDefaultSizes={setFontSizes}
+                              sizes={fontSizes}
+                              menuName={menuName}
+                              theme={theme}
+                              menu={menu.menuEntryGroups}
+                              hiddenItems={hiddenItems}
+                              logo={image}
+                              showPrice={showPrice}
+                              restaurantName={restaurantName}
+                            />
+                        </IFrame>
+                      ) : <Spinner size='big' />
+                    }
+                </div>
+                <div className='page__sidebar editor'>
+                    <div className='editor__row'>
+                      <Text as="h3" fontWeight="700" mb={1}>Business locations</Text>
+                      <Select value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)}>
+                        <option value='629066679975938'>Chez Giorgi</option>
+                        <option value='629066679976136'>Abanico Cocina</option>
+                      </Select>
+                    </div>
+                    {
+                      <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Choose menu</Text>
+                        <Select value={selectedMenu} onChange={(e) => setSelectedMenu(e.target.value)}>
+                          {
+                            menusData ? menusData.nodes.map(({ id, name }, index) => (
+                              <option selected={index === 0} value={id} key={id}>{name}</option>
+                            )) : null
+                          }
+                        </Select>
+                      </div>
+                    }
+                    <Divider mb={2} />
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Menu name</Text>
+                        <Input type='text' defaultValue={selectedMenu} value={menuName} onChange={(e) => setMenuName(e.target.value)} />
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Restaurant name</Text>
+                        <Input type='text' value={restaurantName}  onChange={(e) => setRestaurantName(e.target.value)}/>
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Restaurant logo</Text>
+                        <Button css={{}}>
+                            <IconExport /> 
+                            <label htmlFor="file-upload">Upload image</label>
+                        </Button>
+                        <input style={{ display: 'none' }} type='file' id='file-upload' onChange={onChange} />
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Template</Text>
+                        <Flex>
+                            <img className={`editor__theme ${templateName === 'danis' ? 'editor__theme--current' : ''}`} src='./danis.png' onClick={() => setTemplateName('danis')} />
+                            <img className={`editor__theme ${templateName === 'sasha' ? 'editor__theme--current' : ''}`} src='./sasha.png' onClick={() => setTemplateName('sasha')} />
+                        </Flex>
+                    </div>
+                    <div className='editor__row'>
+                        <Checkbox
+                            defaultChecked
+                            label='Show prices'
+                            checked={showPrice}
+                            onChange={() => setShowPrice((prev) => !prev)}
+                        />
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Color scheme</Text>
+                        <Flex>
+                            <Button onClick={() =>{setTheme('colorful')}}><IconDesign baseColor='#2E61DE' />In color</Button>
+                            <Button onClick={() =>{setTheme('dark')}}><IconDesign />Black and white</Button>
+                        </Flex>
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Font size for restaurant name</Text>
+                        <FontSizeSelect value={fontSizes?.restaurantName} onChange={(e) => setFontSizes((sizes) => ({ ...sizes, restaurantName: e.target.value}))} />
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Font size for menu name</Text>
+                        <FontSizeSelect value={fontSizes?.menuName} onChange={(e) => setFontSizes((sizes) => ({ ...sizes, menuName: e.target.value}))} />
+                    </div>
+                    <div className='editor__row'>
+                        <Text as="h3" fontWeight="700" mb={1}>Font size for group title</Text>
+                        <FontSizeSelect value={fontSizes?.groupTitle} onChange={(e) => setFontSizes((sizes) => ({ ...sizes, groupTitle: e.target.value}))} />
+                    </div>
+                    <div className='editor__footer'>
+                      <Button variant='secondary' fill width='100%' mt='auto' onClick={() => {document.getElementById('pdf').contentWindow.print()}}><IconExport baseColor='#fff' /> Export PDF</Button>
+                    </div>
+                </div>
+            </div>
+        </FlameTheme>
+    );
+  }
+
+export default Menu;

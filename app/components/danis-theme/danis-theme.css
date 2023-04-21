@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap&family=Inter:wght@500&display=swap');
+
+@page {
+    margin: 0;
+}
+
+@media print {
+    .theme__aside {
+        position: absolute;
+        min-height: 100vh;
+    }
+}
+
+body {
+    color: #020203;
+    font-weight: 500;
+    font-family: 'Inter';
+    background-color: #fff;
+}
+
+.theme {
+    position: relative;
+    display: flex;
+    width: 100%;
+    font-family: 'Staatliches';
+}
+
+.theme__aside {
+    position: sticky;
+    top: 0;
+    width: 19%;
+    color: #fff;
+    min-height: 29.7cm;
+    background-color: #F4C01C;
+}
+
+.theme__menu {
+    flex-grow: 1;
+    padding: 22px 32px;
+}
+
+.theme__menu-name {
+    position: absolute;
+    font-size: 128px;
+    line-height: 1;
+    top: 32px;
+    left: 50%;
+    color: rgba(255, 255, 255, .5);
+    transform: translateX(-50%);
+    writing-mode: vertical-rl;
+}
+
+.theme__branding {
+    position: absolute;
+    width: 100%;
+    bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theme__restaurant-logo {
+    overflow: hidden;
+    max-width: 64px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.theme__restaurant-name {
+    width: 100%;
+    font-size: 21px;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.menu-groups__heading {
+    font-size: 61px;
+    line-height: 1;  
+    color: #F4C01C;
+    margin-bottom: 16px;  
+}
+
+.menu-groups__item {
+    margin-bottom: 32px;
+}
+
+.menu-groups__product-item {
+    font-size: 21px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6em;
+}
+
+.menu-groups__product-price {
+    margin-left: 30px;
+}

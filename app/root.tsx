@@ -11,9 +11,11 @@ import {
 
 import { getUser } from "~/session.server";
 import tailwindStylesheetUrl from "~/styles/tailwind.css";
+import mainStylesheetUrl from "~/styles/styles.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesheetUrl },
+  { rel: "stylesheet", href: mainStylesheetUrl },
 ];
 
 export const loader = async ({ request }: LoaderArgs) => {

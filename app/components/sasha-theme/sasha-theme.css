@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Graduate&family=Inter:wght@500&display=swap');
+
+body {
+    color: #fff;
+    font-weight: 500;
+    font-family: 'Inter';
+    background-color: #303338;
+}
+
+.theme__header {
+    position: sticky;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    top: 0;
+    width: 100%;
+    padding: 32px;
+    box-sizing: border-box;
+    background-color: #303338;
+}
+
+@page {
+    margin: 0;
+    padding-top: 120px;
+    background-color: #303338;
+}
+
+@media print {
+    .menu-groups__item {
+        page-break-inside: avoid;
+    }
+}
+
+.theme__menu {
+    flex-grow: 1;
+    padding: 0 32px 32px;
+}
+
+.theme__menu-name {
+    font-family: 'Graduate';
+    line-height: 1;
+}
+
+.theme__branding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theme__restaurant-logo {
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 32px;
+    margin-bottom: 4px;
+}
+
+.theme__restaurant-name {
+    width: 100%;
+    font-size: 21px;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.menu-groups__heading {
+    line-height: 1;  
+    font-family: 'Graduate';
+    color: #F4C01C;
+    margin-bottom: 16px;  
+}
+
+.menu-groups__item {
+    margin-bottom: 32px;
+}
+
+.menu-groups__product-item {
+    font-size: 21px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6em;
+}
+
+.menu-groups__product-price {
+    margin-left: 30px;
+}
