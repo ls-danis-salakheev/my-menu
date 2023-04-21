@@ -13,7 +13,7 @@ let keycloakStrategy = new KeycloakStrategy(
     domain: "auth0-mock.sbx.lsk.lightspeed.app/auth",
     realm: "k-series-realm",
     clientID: "pos-admin-client-id",
-    clientSecret: (process.env.VAL as string),
+    clientSecret: (process.env.pass_val as string),
     callbackURL: "/auth/auth0/callback",
   },
   async ({ accessToken }) => {
